@@ -3,7 +3,7 @@
 include('../includes/dbconnection.php'); // Include your database connection file
 
 $id = $con->real_escape_string($_GET['id']);
-$query = "SELECT * FROM Products WHERE id = $id";
+$query = "SELECT * FROM products WHERE id = $id";
 $result = $con->query($query);
 $product = $result->fetch_assoc();
 
@@ -17,9 +17,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $unit_of_measure_id = $con->real_escape_string($_POST['unit_of_measure']);
     $status = $con->real_escape_string($_POST['status']);
 
-    $query = "UPDATE Products SET name = '$name', description = '$description', productgroupid = '$product_group_id', unitofmeasureid = '$unit_of_measure_id', status = '$status' WHERE id = $id";
+    $query = "UPDATE products SET name = '$name', description = '$description', productgroupid = '$product_group_id', unitofmeasureid = '$unit_of_measure_id', status = '$status' WHERE id = $id";
     if ($con->query($query)) {
-        header('Location: product_list.php');
+        header('Location: ProductList.php');
     } else {
         echo "Error: " . $con->error;
     }

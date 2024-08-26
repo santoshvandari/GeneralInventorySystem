@@ -1,8 +1,8 @@
 <?php
 include('../includes/dbconnection.php'); // Include your database connection file
 
-$query = "SELECT p.id, p.name, p.description, pg.name as product_group, uom.name as unit_of_measure, p.status 
-          FROM Products p 
+$query = "SELECT p.id, p.name, p.description, pg.name as product_group, uom.name as UnitOfMeasure, p.status 
+          FROM products p 
           JOIN ProductGroups pg ON p.productgroupid = pg.id 
           JOIN UnitOfMeasure uom ON p.unitofmeasureid = uom.id";
 $result = $con->query($query);
@@ -33,7 +33,7 @@ $result = $con->query($query);
             <td><?php echo $row['name']; ?></td>
             <td><?php echo $row['description']; ?></td>
             <td><?php echo $row['product_group']; ?></td>
-            <td><?php echo $row['unit_of_measure']; ?></td>
+            <td><?php echo $row['UnitOfMeasure']; ?></td>
             <td><?php echo ucfirst($row['status']); ?></td>
             <td>
                 <a href="ProductEdit.php?id=<?php echo $row['id']; ?>">Edit</a> | 
