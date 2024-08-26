@@ -31,13 +31,13 @@
         FOREIGN KEY (product_id) REFERENCES products(id) -- assuming products table exists
     );";
     
-    if($conn->query($customer)){
+    if($con->query($customer)){
         echo "Customers Table created successfully<br>";
     }
-    if($conn->query($sales)){
+    if($con->query($sales)){
         echo "Sales Table created successfully<br>";
     }
-    if($conn->query($salesitems)){
+    if($con->query($salesitems)){
         echo "SalesItems Table created successfully<br>";
     }
 

@@ -55,7 +55,7 @@ $products = $con->query("SELECT * FROM products");
                 <label for="quantity[]">Quantity:</label>
                 <input type="number" name="quantity[]" required>
                 <label for="unit_price[]">Unit Price:</label>
-                <input type="number" name="unit_price[]" step="0.01" required>
+                <input type="number" name="unit_price[]" step="1" required>
             </div>
         </div>
         <button type="button" onclick="addItem()">Add Item</button>
@@ -76,7 +76,7 @@ $products = $con->query("SELECT * FROM products");
                 <label for="quantity[]">Quantity:</label>
                 <input type="number" name="quantity[]" required>
                 <label for="unit_price[]">Unit Price:</label>
-                <input type="number" name="unit_price[]" step="0.01" required>
+                <input type="number" name="unit_price[]" step="1" required>
             `;
             container.appendChild(newItem);
         }

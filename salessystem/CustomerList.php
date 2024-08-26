@@ -14,7 +14,7 @@ $result = $con->query($sql);
 <body>
     <h1>Customer List</h1>
     <a href="CustomerCreate.php">Add New Customer</a>
-    <table>
+    <table border="1">
         <thead>
             <tr>
                 <th>ID</th>

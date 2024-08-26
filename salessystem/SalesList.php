@@ -16,7 +16,7 @@ $result = $con->query($sql);
 <body>
     <h1>Sales List</h1>
     <a href="SalesCreate.php">Create New Sale</a>
-    <table>
+    <table border="1">
         <thead>
             <tr>
                 <th>ID</th>

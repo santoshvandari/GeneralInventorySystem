@@ -1,9 +1,9 @@
 <?php
     include('dbconnection.php');
     // delete all the database tables and create the following tables:
-    $con->query("DROP TABLE IF EXISTS ProductGroups");
-    $con->query("DROP TABLE IF EXISTS UnitOfMeasure");
-    $con->query("DROP TABLE IF EXISTS products");
+    // $con->query("DROP TABLE IF EXISTS ProductGroups");
+    // $con->query("DROP TABLE IF EXISTS UnitOfMeasure");
+    // $con->query("DROP TABLE IF EXISTS products");
     $productgroup="CREATE TABLE IF NOT EXISTS ProductGroups (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 name VARCHAR(255) NOT NULL,
@@ -15,7 +15,7 @@
                 code VARCHAR(50) NOT NULL,
                 description TEXT,
                 status ENUM('active', 'inactive') DEFAULT 'active');";
-    $producttable="CREATE TABLE IF NOT EXISTS Products (
+    $producttable="CREATE TABLE IF NOT EXISTS products (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 name VARCHAR(255) NOT NULL,
                 description TEXT,

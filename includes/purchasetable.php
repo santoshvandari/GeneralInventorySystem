@@ -29,16 +29,16 @@
         unit_price DECIMAL(10, 2),
         total_price DECIMAL(10, 2) GENERATED ALWAYS AS (quantity * unit_price) STORED,
         FOREIGN KEY (purchase_id) REFERENCES Purchases(id),
-        FOREIGN KEY (product_id) REFERENCES Products(id)
+        FOREIGN KEY (product_id) REFERENCES products(id)
     );";
 
-    if($conn->query($suppliers)){
+    if($con->query($suppliers)){
         echo "Suppliers Table created successfully<br>";
     } 
-    if($conn->query($purchases)){
+    if($con->query($purchases)){
         echo "Purchases Table created successfully<br>";
     }
-    if($conn->query($purchaseitems)){
+    if($con->query($purchaseitems)){
         echo "PurchaseItems Table created successfully<br>";
     }
 
