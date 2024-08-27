@@ -25,33 +25,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Product</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Create Product</h1>
-    <form method="post" action="">
-        <label>Name:</label>
-        <input type="text" name="name" required><br>
-        <label>Description:</label>
-        <textarea name="description"></textarea><br>
-        <label>Product Group:</label>
-        <select name="product_group">
-            <?php while($row = $product_groups->fetch_assoc()): ?>
-            <option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
-            <?php endwhile; ?>
-        </select><br>
-        <label>Unit of Measure:</label>
-        <select name="unit_of_measure">
-            <?php while($row = $units_of_measure->fetch_assoc()): ?>
-            <option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
-            <?php endwhile; ?>
-        </select><br>
-        <label>Status:</label>
-        <select name="status">
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-        </select><br>
-        <input type="submit" value="Create">
-    </form>
+    <div class="container mt-5">
+        <h1 class="mb-4">Create Product</h1>
+        <form method="post" action="">
+            <div class="mb-3">
+                <label for="name" class="form-label">Name:</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description:</label>
+                <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="product_group" class="form-label">Product Group:</label>
+                <select class="form-select" id="product_group" name="product_group" required>
+                    <?php while($row = $product_groups->fetch_assoc()): ?>
+                    <option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
+                    <?php endwhile; ?>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="unit_of_measure" class="form-label">Unit of Measure:</label>
+                <select class="form-select" id="unit_of_measure" name="unit_of_measure" required>
+                    <?php while($row = $units_of_measure->fetch_assoc()): ?>
+                    <option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
+                    <?php endwhile; ?>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="status" class="form-label">Status:</label>
+                <select class="form-select" id="status" name="status" required>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Create</button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 </body>
 </html>
