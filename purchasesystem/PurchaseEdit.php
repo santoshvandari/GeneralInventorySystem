@@ -10,7 +10,7 @@ if (!$result) {
 $purchase = $result->fetch_assoc();
 
 $suppliers = $con->query("SELECT id, name FROM Suppliers WHERE status='active'");
-$products = $con->query("SELECT id, name FROM Products WHERE status='active'");
+$products = $con->query("SELECT id, name FROM products WHERE status='active'");
 $purchase_items = $con->query("SELECT * FROM PurchaseItems WHERE purchase_id = $id");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
