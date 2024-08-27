@@ -1,49 +1,47 @@
 <?php
-// Include database connection
-include('../includes/dbconnection.php');
+// Include database connection and common dashboard
 include('../common/dashboard.php');
 
-// Handle form submission
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $customer_id = $_POST['customer_id'] ?? null;
-    $total_amount = $_POST['total_amount'];
-    $products = $_POST['product_id'];
-    $quantities = $_POST['quantity'];
-    
+// Initialize variables to store error messages and form values
+$error_message = '';
+$customer_id = $_POST['customer_id'] ?? null;
+$total_amount = $_POST['total_amount'] ?? 0;
+$products = $_POST['product_id'] ?? [];
+$quantities = $_POST['quantity'] ?? [];
+$unit_prices = $_POST['unit_price'] ?? [];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $con->begin_transaction();
     try {
         // Validate stock availability
         foreach ($products as $index => $product_id) {
             $quantity = $quantities[$index];
             
-            $sql = "SELECT remaining_stock FROM stock WHERE product_id = ?";
-            $stmt = $con->prepare($sql);
+            $stmt = $con->prepare("SELECT remaining_stock FROM stock WHERE product_id = ?");
             $stmt->bind_param('i', $product_id);
             $stmt->execute();
             $result = $stmt->get_result();
             $row = $result->fetch_assoc();
 
             if (!$row || $row['remaining_stock'] < $quantity) {
-                echo "<script>alert('Error: Insufficient stock for product ID: " . $product_id . "');</script>";
-                return;
+                $error_message = 'Error: Insufficient stock for product ID: ' . htmlspecialchars($product_id);
+                throw new Exception($error_message);
             }
         }
 
-        // Insert sale
-        $sql = "INSERT INTO sales (customer_id, total_amount) VALUES (?, ?)";
-        $stmt = $con->prepare($sql);
+        // Insert sale record
+        $stmt = $con->prepare("INSERT INTO sales (customer_id, total_amount) VALUES (?, ?)");
         $stmt->bind_param('id', $customer_id, $total_amount);
-
         if ($stmt->execute()) {
             $sale_id = $stmt->insert_id;
 
             // Insert sale items and update stock
-            $sql = "INSERT INTO sale_items (sale_id, product_id, quantity, unit_price) VALUES (?, ?, ?, ?)";
-            $stmt = $con->prepare($sql);
+            $stmt = $con->prepare("INSERT INTO sale_items (sale_id, product_id, quantity, unit_price) VALUES (?, ?, ?, ?)");
+            $update_stock_stmt = $con->prepare("UPDATE stock SET sales_stock = sales_stock + ?, remaining_stock = remaining_stock - ? WHERE product_id = ?");
 
             foreach ($products as $index => $product_id) {
                 $quantity = $quantities[$index];
-                $unit_price = $_POST['unit_price'][$index];
+                $unit_price = $unit_prices[$index];
                 
                 // Insert sale item
                 $stmt->bind_param('iiid', $sale_id, $product_id, $quantity, $unit_price);
@@ -52,12 +50,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
 
                 // Update stock
-                $sql = "UPDATE stock SET sales_stock = sales_stock + ?, remaining_stock = remaining_stock - ? WHERE product_id = ?";
-                $stmt = $con->prepare($sql);
-                $stmt->bind_param('iii', $quantity, $quantity, $product_id);
-
-                if (!$stmt->execute()) {
-                    throw new Exception("Error updating stock: " . $stmt->error);
+                $update_stock_stmt->bind_param('iii', $quantity, $quantity, $product_id);
+                if (!$update_stock_stmt->execute()) {
+                    throw new Exception("Error updating stock: " . $update_stock_stmt->error);
                 }
             }
 
@@ -69,53 +64,62 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     } catch (Exception $e) {
         $con->rollback();
-        echo "<script>alert('Error: " . $e->getMessage() . "');</script>";
+        // Error message will be displayed above the form
     }
 }
 
 // Fetch customers and products
 $customers = $con->query("SELECT * FROM customers");
-$products = $con->query("SELECT * FROM products");
+$products_list = $con->query("SELECT * FROM products");
 ?>
 
 <div class="container mt-5">
     <h1 class="mb-4">Create Sale</h1>
+    
+    <?php if ($error_message): ?>
+        <div class="alert alert-danger" role="alert">
+            <?php echo htmlspecialchars($error_message); ?>
+        </div>
+    <?php endif; ?>
+
     <form method="post" action="" onsubmit="return validateForm()">
         <div class="form-group">
             <label for="customer_id">Customer:</label>
             <select id="customer_id" name="customer_id" class="form-control" required>
-                <option value="0" selected>No customer</option>
+                <option value="0" <?php echo $customer_id === '0' ? 'selected' : ''; ?>>No customer</option>
                 <?php while ($row = $customers->fetch_assoc()) { ?>
-                    <option value="<?php echo htmlspecialchars($row['id']); ?>"><?php echo htmlspecialchars($row['name']); ?></option>
+                    <option value="<?php echo htmlspecialchars($row['id']); ?>" <?php echo $customer_id == $row['id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($row['name']); ?></option>
                 <?php } ?>
             </select>
         </div>
         <div id="sale_items">
-            <div class="sale_item mb-3">
-                <div class="form-group">
-                    <label for="product_id[]">Product:</label>
-                    <select name="product_id[]" class="form-control" onchange="updateProductSelection(this)" required>
-                        <option value="" disabled selected>Select a product</option>
-                        <?php
-                        $products->data_seek(0);
-                        while ($row = $products->fetch_assoc()) { ?>
-                            <option value="<?php echo htmlspecialchars($row['id']); ?>"><?php echo htmlspecialchars($row['name']); ?></option>
-                        <?php } ?>
-                    </select>
+            <?php foreach ($products as $index => $product_id): ?>
+                <div class="sale_item mb-3">
+                    <div class="form-group">
+                        <label for="product_id[]">Product:</label>
+                        <select name="product_id[]" class="form-control" onchange="updateProductSelection(this)" required>
+                            <option value="" disabled>Select a product</option>
+                            <?php
+                            $products_list->data_seek(0);
+                            while ($row = $products_list->fetch_assoc()) { ?>
+                                <option value="<?php echo htmlspecialchars($row['id']); ?>" <?php echo $product_id == $row['id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars($row['name']); ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="quantity[]">Quantity:</label>
+                        <input type="number" name="quantity[]" class="form-control" min="1" oninput="calculateTotal()" value="<?php echo htmlspecialchars($quantities[$index] ?? ''); ?>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="unit_price[]">Unit Price:</label>
+                        <input type="number" name="unit_price[]" class="form-control" step="0.01" min="0" oninput="calculateTotal()" value="<?php echo htmlspecialchars($unit_prices[$index] ?? ''); ?>" required>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="quantity[]">Quantity:</label>
-                    <input type="number" name="quantity[]" class="form-control" min="1" oninput="calculateTotal()" required>
-                </div>
-                <div class="form-group">
-                    <label for="unit_price[]">Unit Price:</label>
-                    <input type="number" name="unit_price[]" class="form-control" step="0.01" min="0" oninput="calculateTotal()" required>
-                </div>
-            </div>
+            <?php endforeach; ?>
         </div>
         <button type="button" class="btn btn-secondary mb-3" onclick="addItem()">Add Item</button>
-        <h3>Total Amount: $<span id="total_amount_display">0.00</span></h3>
-        <input type="hidden" name="total_amount" id="total_amount" value="0">
+        <h3>Total Amount: $<span id="total_amount_display"><?php echo htmlspecialchars($total_amount); ?></span></h3>
+        <input type="hidden" name="total_amount" id="total_amount" value="<?php echo htmlspecialchars($total_amount); ?>">
         <button type="submit" class="btn btn-primary">Save</button>
     </form>
 </div>
@@ -135,8 +139,8 @@ $products = $con->query("SELECT * FROM products");
                 <select name="product_id[]" class="form-control" onchange="updateProductSelection(this)" required>
                     <option value="" disabled selected>Select a product</option>
                     <?php
-                    $products->data_seek(0);
-                    while ($row = $products->fetch_assoc()) { ?>
+                    $products_list->data_seek(0);
+                    while ($row = $products_list->fetch_assoc()) { ?>
                         <option value="<?php echo htmlspecialchars($row['id']); ?>"><?php echo htmlspecialchars($row['name']); ?></option>
                     <?php } ?>
                 </select>
@@ -174,23 +178,29 @@ $products = $con->query("SELECT * FROM products");
 
         allSelects.forEach(select => {
             Array.from(select.options).forEach(option => {
-                if (option.value && selectedValues.includes(option.value) && option.value !== select.value) {
-                    option.disabled = true;
-                } else {
-                    option.disabled = false;
-                }
+                option.disabled = selectedValues.includes(option.value) && option.value !== select.value;
             });
         });
     }
 
     function validateForm() {
         var items = document.querySelectorAll('.sale_item');
-        if (items.length === 0) {
-            alert('Please add at least one product.');
-            return false;
-        }
-        return true;
-    }
-</script>
+        var valid = true;
 
-<?php include('../common/footer.php'); ?>
+        items.forEach(function(item) {
+            var productSelect = item.querySelector('select[name="product_id[]"]');
+            var quantityInput = item.querySelector('input[name="quantity[]"]');
+            var unitPriceInput = item.querySelector('input[name="unit_price[]"]');
+
+            if (!productSelect.value || !quantityInput.value || !unitPriceInput.value) {
+                valid = false;
+            }
+        });
+
+        return valid;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        updateProductSelection();
+    });
+</script>
