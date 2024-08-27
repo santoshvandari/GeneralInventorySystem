@@ -16,7 +16,6 @@
         supplier_id INT,
         purchase_date DATE,
         total_amount DECIMAL(10, 2),
-        status ENUM('pending', 'completed') DEFAULT 'pending',
         FOREIGN KEY (supplier_id) REFERENCES Suppliers(id)
     );";
 

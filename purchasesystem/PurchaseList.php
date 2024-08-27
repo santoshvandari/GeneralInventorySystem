@@ -39,8 +39,7 @@ $purchases = $con->query($query);
                     <td><?php echo htmlspecialchars($row['total_amount']); ?></td>
                     <td><?php echo htmlspecialchars($row['status']); ?></td>
                     <td>
-                        <a href="PurchaseEdit.php?id=<?php echo htmlspecialchars($row['id']); ?>" class="btn btn-warning btn-sm">Edit</a>
-                        <a href="PurchaseDelete.php?id=<?php echo htmlspecialchars($row['id']); ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</a>
+                        <a href="PurchaseView.php?id=<?php echo htmlspecialchars($row['id']); ?>" class="btn btn-info btn-sm">View</a>
                     </td>
                 </tr>
                 <?php endwhile; ?>

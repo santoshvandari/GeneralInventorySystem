@@ -53,59 +53,79 @@ $products = $con->query("SELECT * FROM products");
 <html>
 <head>
     <title>Create Sale</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="../assets/styles.css">
 </head>
 <body>
-    <h1>Create Sale</h1>
-    <form method="post" action="" onsubmit="return validateForm()">
-        <label for="customer_id">Customer:</label>
-        <select id="customer_id" name="customer_id" required>
-            <?php while ($row = $customers->fetch_assoc()) { ?>
-                <option value="<?php echo htmlspecialchars($row['id']); ?>"><?php echo htmlspecialchars($row['name']); ?></option>
-            <?php } ?>
-        </select>
-        <div id="sale_items">
-            <div class="sale_item">
-                <label for="product_id[]">Product:</label>
-                <select name="product_id[]" onchange="updateProductSelection(this)" required>
-                    <option value="" disabled selected>Select a product</option>
-                    <?php
-                    $products->data_seek(0);
-                    while ($row = $products->fetch_assoc()) { ?>
+    <div class="container mt-5">
+        <h1 class="mb-4">Create Sale</h1>
+        <form method="post" action="" onsubmit="return validateForm()">
+            <div class="form-group">
+                <label for="customer_id">Customer:</label>
+                <select id="customer_id" name="customer_id" class="form-control" required>
+                    <?php while ($row = $customers->fetch_assoc()) { ?>
                         <option value="<?php echo htmlspecialchars($row['id']); ?>"><?php echo htmlspecialchars($row['name']); ?></option>
                     <?php } ?>
                 </select>
-                <label for="quantity[]">Quantity:</label>
-                <input type="number" name="quantity[]" min="1" oninput="calculateTotal()" required>
-                <label for="unit_price[]">Unit Price:</label>
-                <input type="number" name="unit_price[]" step="0.01" min="0" oninput="calculateTotal()" required>
             </div>
-        </div>
-        <button type="button" onclick="addItem()">Add Item</button>
-        <h3>Total Amount: $<span id="total_amount_display">0.00</span></h3>
-        <input type="hidden" name="total_amount" id="total_amount" value="0">
-        <button type="submit">Save</button>
-    </form>
+            <div id="sale_items">
+                <div class="sale_item mb-3">
+                    <div class="form-group">
+                        <label for="product_id[]">Product:</label>
+                        <select name="product_id[]" class="form-control" onchange="updateProductSelection(this)" required>
+                            <option value="" disabled selected>Select a product</option>
+                            <?php
+                            $products->data_seek(0);
+                            while ($row = $products->fetch_assoc()) { ?>
+                                <option value="<?php echo htmlspecialchars($row['id']); ?>"><?php echo htmlspecialchars($row['name']); ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="quantity[]">Quantity:</label>
+                        <input type="number" name="quantity[]" class="form-control" min="1" oninput="calculateTotal()" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="unit_price[]">Unit Price:</label>
+                        <input type="number" name="unit_price[]" class="form-control" step="0.01" min="0" oninput="calculateTotal()" required>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-secondary mb-3" onclick="addItem()">Add Item</button>
+            <h3>Total Amount: $<span id="total_amount_display">0.00</span></h3>
+            <input type="hidden" name="total_amount" id="total_amount" value="0">
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
         function addItem() {
             var container = document.getElementById('sale_items');
             var newItem = document.createElement('div');
-            newItem.classList.add('sale_item');
+            newItem.classList.add('sale_item', 'mb-3');
 
             newItem.innerHTML = `
-                <label for="product_id[]">Product:</label>
-                <select name="product_id[]" onchange="updateProductSelection(this)" required>
-                    <option value="" disabled selected>Select a product</option>
-                    <?php
-                    $products->data_seek(0);
-                    while ($row = $products->fetch_assoc()) { ?>
-                        <option value="<?php echo htmlspecialchars($row['id']); ?>"><?php echo htmlspecialchars($row['name']); ?></option>
-                    <?php } ?>
-                </select>
-                <label for="quantity[]">Quantity:</label>
-                <input type="number" name="quantity[]" min="1" oninput="calculateTotal()" required>
-                <label for="unit_price[]">Unit Price:</label>
-                <input type="number" name="unit_price[]" step="0.01" min="0" oninput="calculateTotal()" required>
+                <div class="form-group">
+                    <label for="product_id[]">Product:</label>
+                    <select name="product_id[]" class="form-control" onchange="updateProductSelection(this)" required>
+                        <option value="" disabled selected>Select a product</option>
+                        <?php
+                        $products->data_seek(0);
+                        while ($row = $products->fetch_assoc()) { ?>
+                            <option value="<?php echo htmlspecialchars($row['id']); ?>"><?php echo htmlspecialchars($row['name']); ?></option>
+                        <?php } ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="quantity[]">Quantity:</label>
+                    <input type="number" name="quantity[]" class="form-control" min="1" oninput="calculateTotal()" required>
+                </div>
+                <div class="form-group">
+                    <label for="unit_price[]">Unit Price:</label>
+                    <input type="number" name="unit_price[]" class="form-control" step="0.01" min="0" oninput="calculateTotal()" required>
+                </div>
             `;
             container.appendChild(newItem);
             updateProductSelection();

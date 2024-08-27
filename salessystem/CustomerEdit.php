@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
             <div class="mb-3">
                 <label for="address" class="form-label">Address:</label>
-                <textarea id="address" name="address" class="form-control" rows="3"><?php echo htmlspecialchars($customer['address']); ?></textarea>
+                <input id="address" name="address" class="form-control" value="<?php echo htmlspecialchars($customer['address']); ?>">
             </div>
             <button type="submit" class="btn btn-primary">Save</button>
         </form>

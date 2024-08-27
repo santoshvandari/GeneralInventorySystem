@@ -7,12 +7,11 @@ $products = $con->query("SELECT id, name FROM products WHERE status='active'");
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $supplier_id = $con->real_escape_string($_POST['supplier']);
     $purchase_date = $con->real_escape_string($_POST['purchase_date']);
-    $status = $con->real_escape_string($_POST['status']);
     $total_amount = 0;
 
     // Insert the new purchase record
-    $query = "INSERT INTO Purchases (supplier_id, purchase_date, total_amount, status) 
-              VALUES ('$supplier_id', '$purchase_date', '$total_amount', '$status')";
+    $query = "INSERT INTO Purchases (supplier_id, purchase_date, total_amount) 
+              VALUES ('$supplier_id', '$purchase_date', '$total_amount')";
     if ($con->query($query)) {
         $purchase_id = $con->insert_id;
 
@@ -67,14 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label for="purchase_date" class="form-label">Date:</label>
                 <input type="date" id="purchase_date" name="purchase_date" class="form-control" required>
             </div>
-            <div class="mb-3">
-                <label for="status" class="form-label">Status:</label>
-                <select id="status" name="status" class="form-select" required>
-                    <option value="pending">Pending</option>
-                    <option value="completed">Completed</option>
-                </select>
-            </div>
-
+        
             <h3>Products</h3>
             <div id="product-list">
                 <div class="mb-3 product-row">

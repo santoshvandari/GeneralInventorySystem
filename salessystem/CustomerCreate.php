@@ -1,12 +1,6 @@
 <?php
 include '../includes/dbconnection.php';
 
-// Initialize variables for the form
-$name = '';
-$email = '';
-$phone = '';
-$address = '';
-
 // Process form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Sanitize input
@@ -50,19 +44,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <form method="post" action="">
             <div class="mb-3">
                 <label for="name" class="form-label">Name:</label>
-                <input type="text" id="name" name="name" class="form-control" value="<?php echo htmlspecialchars($name); ?>" required>
+                <input type="text" id="name" name="name" class="form-control" required>
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label">Email:</label>
-                <input type="email" id="email" name="email" class="form-control" value="<?php echo htmlspecialchars($email); ?>" required>
+                <input type="email" id="email" name="email" class="form-control" required>
             </div>
             <div class="mb-3">
                 <label for="phone" class="form-label">Phone:</label>
-                <input type="text" id="phone" name="phone" class="form-control" value="<?php echo htmlspecialchars($phone); ?>">
+                <input type="text" id="phone" name="phone" class="form-control" >
             </div>
             <div class="mb-3">
                 <label for="address" class="form-label">Address:</label>
-                <textarea id="address" name="address" class="form-control" rows="3"><?php echo htmlspecialchars($address); ?></textarea>
+                <input type="text" id="address" name="address" class="form-control" >
             </div>
             <button type="submit" class="btn btn-primary">Save</button>
         </form>
