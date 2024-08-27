@@ -7,7 +7,7 @@ if (isset($_GET['id'])) {
     $purchase_id = intval($_GET['id']);
 
     // Fetch the purchase details
-    $purchase_query = "SELECT p.id, s.name AS supplier_name, p.purchase_date, p.total_amount, p.status 
+    $purchase_query = "SELECT p.id, s.name AS supplier_name, p.purchase_date, p.total_amount
                        FROM Purchases p
                        JOIN Suppliers s ON p.supplier_id = s.id
                        WHERE p.id = ?";
@@ -43,7 +43,6 @@ if (isset($_GET['id'])) {
                     <p><strong>Supplier:</strong> <?php echo htmlspecialchars($purchase['supplier_name']); ?></p>
                     <p><strong>Date:</strong> <?php echo htmlspecialchars($purchase['purchase_date']); ?></p>
                     <p><strong>Total Amount:</strong> <?php echo htmlspecialchars($purchase['total_amount']); ?></p>
-                    <p><strong>Status:</strong> <?php echo htmlspecialchars($purchase['status']); ?></p>
                 </div>
             </div>
 

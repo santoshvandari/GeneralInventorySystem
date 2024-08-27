@@ -163,5 +163,4 @@ $products = $con->query("SELECT * FROM products");
             return true;
         }
     </script>
-</body>
-</html>
+<?php include('../common/footer.php'); ?>
