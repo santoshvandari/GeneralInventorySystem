@@ -1,5 +1,4 @@
 <?php
-// include('dbconnection.php'); // Include your database connection file
 include('../includes/dbconnection.php'); // Include your database connection file
 
 $id = $con->real_escape_string($_GET['id']);
@@ -30,33 +29,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Product</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Edit Product</h1>
-    <form method="post" action="">
-        <label>Name:</label>
-        <input type="text" name="name" value="<?php echo $product['name']; ?>" required><br>
-        <label>Description:</label>
-        <textarea name="description"><?php echo $product['description']; ?></textarea><br>
-        <label>Product Group:</label>
-        <select name="product_group">
-            <?php while($row = $product_groups->fetch_assoc()): ?>
-            <option value="<?php echo $row['id']; ?>" <?php if ($row['id'] == $product['productgroupid']) echo 'selected'; ?>><?php echo $row['name']; ?></option>
-            <?php endwhile; ?>
-        </select><br>
-        <label>Unit of Measure:</label>
-        <select name="unit_of_measure">
-            <?php while($row = $units_of_measure->fetch_assoc()): ?>
-            <option value="<?php echo $row['id']; ?>" <?php if ($row['id'] == $product['unitofmeasureid']) echo 'selected'; ?>><?php echo $row['name']; ?></option>
-            <?php endwhile; ?>
-        </select><br>
-        <label>Status:</label>
-        <select name="status">
-            <option value="active" <?php if ($product['status'] === 'active') echo 'selected'; ?>>Active</option>
-            <option value="inactive" <?php if ($product['status'] === 'inactive') echo 'selected'; ?>>Inactive</option>
-        </select><br>
-        <input type="submit" value="Update">
-    </form>
+    <div class="container mt-5">
+        <h1 class="mb-4">Edit Product</h1>
+        <form method="post" action="">
+            <div class="mb-3">
+                <label class="form-label">Name:</label>
+                <input type="text" name="name" class="form-control" value="<?php echo htmlspecialchars($product['name']); ?>" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Description:</label>
+                <textarea name="description" class="form-control"><?php echo htmlspecialchars($product['description']); ?></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Product Group:</label>
+                <select name="product_group" class="form-select">
+                    <?php while($row = $product_groups->fetch_assoc()): ?>
+                    <option value="<?php echo $row['id']; ?>" <?php if ($row['id'] == $product['productgroupid']) echo 'selected'; ?>>
+                        <?php echo htmlspecialchars($row['name']); ?>
+                    </option>
+                    <?php endwhile; ?>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Unit of Measure:</label>
+                <select name="unit_of_measure" class="form-select">
+                    <?php while($row = $units_of_measure->fetch_assoc()): ?>
+                    <option value="<?php echo $row['id']; ?>" <?php if ($row['id'] == $product['unitofmeasureid']) echo 'selected'; ?>>
+                        <?php echo htmlspecialchars($row['name']); ?>
+                    </option>
+                    <?php endwhile; ?>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Status:</label>
+                <select name="status" class="form-select">
+                    <option value="active" <?php if ($product['status'] === 'active') echo 'selected'; ?>>Active</option>
+                    <option value="inactive" <?php if ($product['status'] === 'inactive') echo 'selected'; ?>>Inactive</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Update</button>
+            <a href="ProductList.php" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 </body>
 </html>
