@@ -1,8 +1,12 @@
 <?php
 include('dashboard.php'); // Include your database connection file
 session_start(); // Ensure session management
+// Check user role
+if ($_SESSION['role'] != 'admin') {
+    header("Location: dashboard.php");
+    exit();
+}
 
-$message = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];

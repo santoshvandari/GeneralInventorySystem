@@ -7,9 +7,6 @@ $sql = "
         p.id, 
         p.name,
         p.status,
-        COALESCE(SUM(pi.quantity), 0) AS purchase_quantity,
-        COALESCE(SUM(si.quantity), 0) AS sold_quantity,
-        COALESCE(SUM(pi.quantity), 0) - COALESCE(SUM(si.quantity), 0) AS remaining_quantity,
         COALESCE(SUM(pi.quantity * pi.unit_price), 0) / NULLIF(COALESCE(SUM(pi.quantity), 0), 0) AS average_rate
     FROM 
         products p
@@ -38,18 +35,28 @@ $result = $con->query($sql);
             </thead>
             <tbody>
                 <?php while ($row = $result->fetch_assoc()) { 
+                    // Fetch stock information for the current product
+                    $stockinfo_result = $con->query("SELECT * FROM stock WHERE product_id=" . $row['id'].";");
+                    $stockinfo = $stockinfo_result->fetch_assoc();
+
                     // Determine the stock status
-                    $status = $row['remaining_quantity'] > 0 ? 'Available' : 'OutOfStock';
-                    $status_class = $row['remaining_quantity'] > 0 ? 'text-success' : 'text-danger';
+                    $status = ($stockinfo && $stockinfo['remaining_stock']) > 0 ? 'Available' : 'Out of Stock';
+                    $status_class = ($stockinfo && $stockinfo['remaining_stock']) > 0 ? 'text-success' : 'text-danger';
+
                     // Handle average rate
                     $average_rate = $row['average_rate'] !== null ? number_format($row['average_rate'], 2) : '0.00';
+
+                    // Handle missing stock info
+                    $purchase_stock = ($stockinfo && $stockinfo['purchase_stock']) ? $stockinfo['purchase_stock'] : '0';
+                    $sales_stock = ($stockinfo && $stockinfo['sales_stock']) ? $stockinfo['sales_stock'] : '0';
+                    $remaining_stock = ($stockinfo && $stockinfo['remaining_stock']) ? $stockinfo['remaining_stock'] : '0';
                 ?>
                     <tr>
                         <td><?php echo htmlspecialchars($row['name']); ?></td>
                         <td>$<?php echo $average_rate; ?></td>
-                        <td><?php echo htmlspecialchars($row['purchase_quantity']); ?></td>
-                        <td><?php echo htmlspecialchars($row['sold_quantity']); ?></td>
-                        <td><?php echo htmlspecialchars($row['remaining_quantity']); ?></td>
+                        <td><?php echo htmlspecialchars($purchase_stock); ?></td>
+                        <td><?php echo htmlspecialchars($sales_stock); ?></td>
+                        <td><?php echo htmlspecialchars($remaining_stock); ?></td>
                         <td class="<?php echo $status_class; ?>"><?php echo htmlspecialchars($status); ?></td>
                     </tr>
                 <?php } ?>

@@ -24,8 +24,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $insert_item_query = "INSERT INTO PurchaseItems (purchase_id, product_id, quantity, unit_price) 
                                   VALUES ('$purchase_id', '$product_id', '$quantity', '$unit_price')";
-            if (!$con->query($insert_item_query)) {
-                die("Error inserting purchase item: " . $con->error);
+            
+            // Update or insert stock information
+            $insert_or_update_stock = "
+                INSERT INTO stock (product_id, purchase_stock, sales_stock)
+                VALUES ('$product_id', '$quantity', 0)
+                ON DUPLICATE KEY UPDATE 
+                purchase_stock = purchase_stock + VALUES(purchase_stock),
+                remaining_stock = (purchase_stock + VALUES(purchase_stock)) - sales_stock
+            ";
+
+            if (!$con->query($insert_item_query) || !$con->query($insert_or_update_stock)) {
+                die("Error inserting purchase item or updating stock: " . $con->error);
             }
         }
 
@@ -42,53 +52,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-    <div class="container mt-5">
-        <h1>Create Purchase</h1>
-        <form method="post" action="">
-            <div class="mb-3">
-                <label for="supplier" class="form-label">Supplier:</label>
-                <select id="supplier" name="supplier" class="form-select" required>
-                    <?php while ($row = $suppliers->fetch_assoc()): ?>
-                        <option value="<?php echo htmlspecialchars($row['id']); ?>"><?php echo htmlspecialchars($row['name']); ?></option>
-                    <?php endwhile; ?>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="purchase_date" class="form-label">Date:</label>
-                <input type="date" id="purchase_date" name="purchase_date" class="form-control" required>
-            </div>
+<div class="container mt-5">
+    <h1>Create Purchase</h1>
+    <form method="post" action="">
+        <div class="mb-3">
+            <label for="supplier" class="form-label">Supplier:</label>
+            <select id="supplier" name="supplier" class="form-select" required>
+                <?php while ($row = $suppliers->fetch_assoc()): ?>
+                    <option value="<?php echo htmlspecialchars($row['id']); ?>"><?php echo htmlspecialchars($row['name']); ?></option>
+                <?php endwhile; ?>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="purchase_date" class="form-label">Date:</label>
+            <input type="date" id="purchase_date" name="purchase_date" class="form-control" required>
+        </div>
 
-            <h3>Products</h3>
-            <div id="product-list">
-                <div class="mb-3 product-row">
-                    <label class="form-label">Product:</label>
-                    <select name="products[]" class="form-select" required>
-                        <?php
-                        // Reset the products result pointer to the beginning
-                        $products->data_seek(0);
-                        while ($row = $products->fetch_assoc()): ?>
-                            <option value="<?php echo htmlspecialchars($row['id']); ?>"><?php echo htmlspecialchars($row['name']); ?></option>
-                        <?php endwhile; ?>
-                    </select>
-                    <label class="form-label">Quantity:</label>
-                    <input type="number" name="quantities[]" class="form-control" required>
-                    <label class="form-label">Unit Price:</label>
-                    <input type="number" step="0.01" name="prices[]" class="form-control" required>
-                </div>
-            </div>
-            <button type="button" class="btn btn-secondary" onclick="addProduct()">Add Another Product</button><br><br>
-
-            <input type="submit" class="btn btn-primary" value="Create">
-        </form>
-    </div>
-
-    <script>
-        function addProduct() {
-            var productList = document.getElementById('product-list');
-            var newProductDiv = document.createElement('div');
-            newProductDiv.classList.add('mb-3', 'product-row');
-
-            newProductDiv.innerHTML = `
+        <h3>Products</h3>
+        <div id="product-list">
+            <div class="mb-3 product-row">
                 <label class="form-label">Product:</label>
                 <select name="products[]" class="form-select" required>
                     <?php
@@ -102,9 +84,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="number" name="quantities[]" class="form-control" required>
                 <label class="form-label">Unit Price:</label>
                 <input type="number" step="0.01" name="prices[]" class="form-control" required>
-            `;
+            </div>
+        </div>
+        <button type="button" class="btn btn-secondary" onclick="addProduct()">Add Another Product</button><br><br>
 
-            productList.appendChild(newProductDiv);
-        }
-    </script>
+        <input type="submit" class="btn btn-primary" value="Create">
+    </form>
+</div>
+
+<script>
+    function addProduct() {
+        var productList = document.getElementById('product-list');
+        var newProductDiv = document.createElement('div');
+        newProductDiv.classList.add('mb-3', 'product-row');
+
+        newProductDiv.innerHTML = `
+            <label class="form-label">Product:</label>
+            <select name="products[]" class="form-select" required>
+                <?php
+                // Reset the products result pointer to the beginning
+                $products->data_seek(0);
+                while ($row = $products->fetch_assoc()): ?>
+                    <option value="<?php echo htmlspecialchars($row['id']); ?>"><?php echo htmlspecialchars($row['name']); ?></option>
+                <?php endwhile; ?>
+            </select>
+            <label class="form-label">Quantity:</label>
+            <input type="number" name="quantities[]" class="form-control" required>
+            <label class="form-label">Unit Price:</label>
+            <input type="number" step="0.01" name="prices[]" class="form-control" required>
+        `;
+
+        productList.appendChild(newProductDiv);
+    }
+</script>
 <?php include('../common/footer.php'); ?>

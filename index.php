@@ -7,7 +7,7 @@
 // include("includes/salestable.php");
 // include('includes/usertable.php');
 
-header("Location: common/dashboard.php");
+header("Location: common/index.php");
 
 
 ?>

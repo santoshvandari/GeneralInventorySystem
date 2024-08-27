@@ -1,5 +1,4 @@
 <?php
-    // include("head.php");
     include '../includes/dbconnection.php';
 
 ?>

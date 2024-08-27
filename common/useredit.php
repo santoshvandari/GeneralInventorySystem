@@ -2,10 +2,10 @@
 include('dashboard.php');
 
 // Check user role
-// if ($_SESSION['role'] != 'admin') {
-//     header("Location: dashboard.php");
-//     exit();
-// }
+if ($_SESSION['role'] != 'admin') {
+    header("Location: dashboard.php");
+    exit();
+}
 
 
 // Get user ID from the URL

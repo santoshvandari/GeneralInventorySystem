@@ -3,10 +3,10 @@
 // session_start();
 include('dashboard.php');
 // Check user role
-// if ($_SESSION['role'] != 'admin') {
-//     header("Location: dashboard.php");
-//     exit();
-// }
+if ($_SESSION['role'] != 'admin') {
+    header("Location: dashboard.php");
+    exit();
+}
 
 // Fetch users from the database
 $sql = "SELECT id, username, role, created_at FROM users";

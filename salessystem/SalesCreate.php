@@ -1,13 +1,34 @@
 <?php
-// Include your database connection file and dashboard
+// Include database connection
 include('../includes/dbconnection.php');
 include('../common/dashboard.php');
 
-
+// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $customer_id = $_POST['customer_id'] ?? null; // Customer ID can be null
+    $customer_id = $_POST['customer_id'] ?? null;
     $total_amount = $_POST['total_amount'];
+    $products = $_POST['product_id'];
+    $quantities = $_POST['quantity'];
+    
+    $con->begin_transaction();
     try {
+        // Validate stock availability
+        foreach ($products as $index => $product_id) {
+            $quantity = $quantities[$index];
+            
+            $sql = "SELECT remaining_stock FROM stock WHERE product_id = ?";
+            $stmt = $con->prepare($sql);
+            $stmt->bind_param('i', $product_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $row = $result->fetch_assoc();
+
+            if (!$row || $row['remaining_stock'] < $quantity) {
+                echo "<script>alert('Error: Insufficient stock for product ID: " . $product_id . "');</script>";
+                return;
+            }
+        }
+
         // Insert sale
         $sql = "INSERT INTO sales (customer_id, total_amount) VALUES (?, ?)";
         $stmt = $con->prepare($sql);
@@ -16,27 +37,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($stmt->execute()) {
             $sale_id = $stmt->insert_id;
 
-            // Insert sale items
+            // Insert sale items and update stock
             $sql = "INSERT INTO sale_items (sale_id, product_id, quantity, unit_price) VALUES (?, ?, ?, ?)";
             $stmt = $con->prepare($sql);
 
-            foreach ($_POST['product_id'] as $index => $product_id) {
-                $quantity = $_POST['quantity'][$index];
+            foreach ($products as $index => $product_id) {
+                $quantity = $quantities[$index];
                 $unit_price = $_POST['unit_price'][$index];
+                
+                // Insert sale item
                 $stmt->bind_param('iiid', $sale_id, $product_id, $quantity, $unit_price);
+                if (!$stmt->execute()) {
+                    throw new Exception("Error inserting sale item: " . $stmt->error);
+                }
+
+                // Update stock
+                $sql = "UPDATE stock SET sales_stock = sales_stock + ?, remaining_stock = remaining_stock - ? WHERE product_id = ?";
+                $stmt = $con->prepare($sql);
+                $stmt->bind_param('iii', $quantity, $quantity, $product_id);
 
                 if (!$stmt->execute()) {
-                    throw new Exception("Error: " . $stmt->error);
+                    throw new Exception("Error updating stock: " . $stmt->error);
                 }
             }
 
+            $con->commit();
             header("Location: SalesList.php");
             exit();
         } else {
-            throw new Exception("Error: " . $stmt->error);
+            throw new Exception("Error inserting sale: " . $stmt->error);
         }
     } catch (Exception $e) {
-        echo "<p>Error: " . htmlspecialchars($e->getMessage()) . "</p>";
+        $con->rollback();
+        echo "<script>alert('Error: " . $e->getMessage() . "');</script>";
     }
 }
 
@@ -49,9 +82,9 @@ $products = $con->query("SELECT * FROM products");
     <h1 class="mb-4">Create Sale</h1>
     <form method="post" action="" onsubmit="return validateForm()">
         <div class="form-group">
-            <label for="customer_id">Customer (optional):</label>
-            <select id="customer_id" name="customer_id" class="form-control">
-                <option value="" selected>No customer</option>
+            <label for="customer_id">Customer:</label>
+            <select id="customer_id" name="customer_id" class="form-control" required>
+                <option value="0" selected>No customer</option>
                 <?php while ($row = $customers->fetch_assoc()) { ?>
                     <option value="<?php echo htmlspecialchars($row['id']); ?>"><?php echo htmlspecialchars($row['name']); ?></option>
                 <?php } ?>
