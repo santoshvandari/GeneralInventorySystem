@@ -1,5 +1,6 @@
 <?php
-include '../includes/dbconnection.php';
+include('../common/dashboard.php');
+// include '../includes/dbconnection.php';
 
 // Initialize variables
 $id = '';
@@ -43,16 +44,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Customer</title>
-    <link rel="stylesheet" href="../assets/styles.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
     <div class="container mt-5">
         <h1>Edit Customer</h1>
 
@@ -83,7 +74,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <button type="submit" class="btn btn-primary">Save</button>
         </form>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<?php include('../common/footer.php'); ?>

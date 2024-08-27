@@ -66,9 +66,9 @@
                 <a href="../productsystem/ProductList.php">Product</a>
                 <a href="../purchasesystem/SupplierList.php">Suppliers</a>
                 <a href="../purchasesystem/PurchaseList.php">Purchase</a>
-                <a href="./salessystem/CustomerList.php">Customer</a>
-                <a href="./salessystem/SalesList.php">Sales</a>
-                <a href="currentstock.php">Inventory Status</a>
+                <a href="../salessystem/CustomerList.php">Customer</a>
+                <a href="../salessystem/SalesList.php">Sales</a>
+                <a href="../common/currentstock.php">Inventory Status</a>
                 <?php
                     // if($_SESSION['role'] == 'admin') {
                     //     echo '<a href="users.php">Users</a>';

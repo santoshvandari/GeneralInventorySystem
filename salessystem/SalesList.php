@@ -1,5 +1,7 @@
 <?php
-include '../includes/dbconnection.php';
+// include '../includes/dbconnection.php';
+include('../common/dashboard.php');
+
 
 // Fetch sales data with customer names
 $sql = "SELECT sales.id, customers.name AS customer_name, sales.sale_date, sales.total_amount
@@ -45,7 +47,4 @@ $result = $con->query($sql);
             </tbody>
         </table>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<?php include('../common/footer.php'); ?>

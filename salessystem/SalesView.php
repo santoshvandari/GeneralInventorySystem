@@ -1,5 +1,6 @@
 <?php
-include '../includes/dbconnection.php';
+// include '../includes/dbconnection.php';
+include('../common/dashboard.php');
 
 $sale_id = $_GET['id'];
 
@@ -23,16 +24,7 @@ $stmt->bind_param('i', $sale_id);
 $stmt->execute();
 $sale_items = $stmt->get_result();
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sale View</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="../assets/styles.css">
-</head>
-<body>
+
     <div class="container mt-5">
         <h1>Sale Details</h1>
         <div class="mb-4">
@@ -64,6 +56,4 @@ $sale_items = $stmt->get_result();
         <a href="SalesList.php" class="btn btn-secondary mt-3">Back to Sales List</a>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<?php include('../common/footer.php'); ?>

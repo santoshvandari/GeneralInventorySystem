@@ -1,5 +1,7 @@
 <?php
-include '../includes/dbconnection.php';
+// include '../includes/dbconnection.php';
+include('../common/dashboard.php');
+
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $customer_id = $_POST['customer_id'];
@@ -49,14 +51,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $customers = $con->query("SELECT * FROM customers");
 $products = $con->query("SELECT * FROM products");
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Create Sale</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="../assets/styles.css">
-</head>
-<body>
     <div class="container mt-5">
         <h1 class="mb-4">Create Sale</h1>
         <form method="post" action="" onsubmit="return validateForm()">

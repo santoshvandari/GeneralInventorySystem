@@ -1,6 +1,6 @@
 <?php
-include '../includes/dbconnection.php';
-
+// include '../includes/dbconnection.php';
+include('../common/dashboard.php');
 $supplier_id = $_GET['id'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -26,13 +26,7 @@ $stmt->bind_param('i', $supplier_id);
 $stmt->execute();
 $supplier = $stmt->get_result()->fetch_assoc();
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Edit Supplier</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+
     <div class="container mt-5">
         <h1>Edit Supplier</h1>
         <form method="post" action="">
@@ -55,8 +49,4 @@ $supplier = $stmt->get_result()->fetch_assoc();
         </form>
         <a href="SupplierList.php" class="btn btn-secondary mt-3">Back to Supplier List</a>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
+<?php include('../common/footer.php'); ?>

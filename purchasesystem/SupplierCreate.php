@@ -1,5 +1,7 @@
 <?php
-include '../includes/dbconnection.php';
+// include '../includes/dbconnection.php';
+include('../common/dashboard.php');
+
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $name = $_POST['name'];
@@ -18,13 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Create Supplier</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
     <div class="container mt-5">
         <h1>Create Supplier</h1>
         <form method="post" action="">
@@ -47,8 +42,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </form>
         <a href="SupplierList.php" class="btn btn-secondary mt-3">Back to Supplier List</a>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
+<?php include('../common/footer.php'); ?>
