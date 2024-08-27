@@ -1,11 +1,16 @@
 <?php
-include('../includes/dbconnection.php'); // Include your database connection file
+// include('../includes/dbconnection.php'); // Include your database connection file
+include('../common/dashboard.php');
 
 $id = $con->real_escape_string($_GET['id']);
 $query = "DELETE FROM products WHERE id = $id";
-if ($con->query($query)) {
+try{
+    $con->query($query);
     header('Location: ProductList.php');
-} else {
+}catch(Exception $e){
+    echo "<script>alert('Failed to Delete');
+    window.location.href='ProductList.php';
+    </script>";
     echo "Error: " . $con->error;
 }
 ?>

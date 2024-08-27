@@ -1,5 +1,6 @@
 <?php
     // include("head.php");
+    include '../includes/dbconnection.php';
 
 ?>
  <!DOCTYPE html>
@@ -60,25 +61,22 @@
             <!-- Sidebar -->
             <div class="col-md-3 col-lg-2 sidebar">
                 <h4>Menu</h4>
-                <a href="#">Product</a>
-                <a href="#">Product Group</a>
-                <a href="#">Unit of Measure</a>
-                <a href="#">Purchase</a>
-                <a href="#">Sales</a>
-                <a href="#">Customer</a>
-                <a href="logout.php">Logout</a>
+                <a href="../productsystem/ProductGroupList.php">Product Group</a>
+                <a href="../productsystem/UnitOfMeasureList.php">Unit of Measure</a>
+                <a href="../productsystem/ProductList.php">Product</a>
+                <a href="../purchasesystem/SupplierList.php">Suppliers</a>
+                <a href="../purchasesystem/PurchaseList.php">Purchase</a>
+                <a href="./salessystem/CustomerList.php">Customer</a>
+                <a href="./salessystem/SalesList.php">Sales</a>
+                <a href="currentstock.php">Inventory Status</a>
+                <?php
+                    // if($_SESSION['role'] == 'admin') {
+                    //     echo '<a href="users.php">Users</a>';
+                    // }
+                    ?>
+                <a href="#">Logout</a>
             </div>
 
             <!-- Content -->
             <div class="col-md-9 col-lg-10 content">
-                <h1>Welcome to the Inventory System Dashboard</h1>
-                <p>Select an option from the menu to get started.</p>
-            </div>
-        </div>
-    </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-</body>
-</html>

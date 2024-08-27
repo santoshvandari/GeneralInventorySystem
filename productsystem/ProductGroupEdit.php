@@ -1,5 +1,6 @@
 <?php
-include('../includes/dbconnection.php'); // Include your database connection file
+// include('../includes/dbconnection.php'); // Include your database connection file
+include('../common/dashboard.php');
 
 $id = $con->real_escape_string($_GET['id']);
 $query = "SELECT * FROM ProductGroups WHERE id = $id";
@@ -52,7 +53,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-</body>
-</html>
+<?php include('../common/footer.php'); ?>

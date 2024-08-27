@@ -1,5 +1,6 @@
 <?php
-include('../includes/dbconnection.php'); // Include your database connection file
+// include('../includes/dbconnection.php'); // Include your database connection file
+include('../common/dashboard.php');
 
 $product_groups = $con->query("SELECT id, name FROM ProductGroups WHERE status='active'");
 $units_of_measure = $con->query("SELECT id, name FROM UnitOfMeasure WHERE status='active'");
@@ -21,15 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Product</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
     <div class="container mt-5">
         <h1 class="mb-4">Create Product</h1>
         <form method="post" action="">
@@ -67,8 +59,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button type="submit" class="btn btn-primary">Create</button>
         </form>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-</body>
-</html>
+<?php include '../common/footer.php'; ?>

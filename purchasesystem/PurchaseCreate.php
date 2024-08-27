@@ -1,5 +1,6 @@
 <?php
-include('../includes/dbconnection.php'); // Include your database connection file
+// include('../includes/dbconnection.php'); // Include your database connection file
+include('../common/dashboard.php');
 
 $suppliers = $con->query("SELECT id, name FROM Suppliers WHERE status='active'");
 $products = $con->query("SELECT id, name FROM products WHERE status='active'");
@@ -43,14 +44,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Create Purchase</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
     <div class="container mt-5">
         <h1>Create Purchase</h1>
         <form method="post" action="">
@@ -115,7 +108,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             productList.appendChild(newProductDiv);
         }
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<?php include('../common/footer.php'); ?>

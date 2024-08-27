@@ -1,5 +1,6 @@
 <?php
-include('../includes/dbconnection.php'); // Include your database connection file
+// include('../includes/dbconnection.php'); // Include your database connection file
+include('../common/dashboard.php');
 
 $query = "SELECT p.id, p.name, p.description, pg.name as product_group, uom.name as UnitOfMeasure, p.status 
           FROM products p 
@@ -8,15 +9,6 @@ $query = "SELECT p.id, p.name, p.description, pg.name as product_group, uom.name
 $result = $con->query($query);
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Products</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
     <div class="container mt-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1>Products</h1>
@@ -53,7 +45,4 @@ $result = $con->query($query);
         </table>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-</body>
-</html>
+ <?php include('../common/footer.php'); ?>
