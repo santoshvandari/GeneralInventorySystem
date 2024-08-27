@@ -3,13 +3,10 @@
 include('../includes/dbconnection.php');
 include('../common/dashboard.php');
 
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $customer_id = $_POST['customer_id'] ?? null; // Customer ID can be null
     $total_amount = $_POST['total_amount'];
-
-    // Begin a transaction
-    $con->begin_transaction();
-
     try {
         // Insert sale
         $sql = "INSERT INTO sales (customer_id, total_amount) VALUES (?, ?)";
@@ -33,16 +30,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
             }
 
-            // Commit transaction
-            $con->commit();
             header("Location: SalesList.php");
             exit();
         } else {
             throw new Exception("Error: " . $stmt->error);
         }
     } catch (Exception $e) {
-        // Rollback transaction on error
-        $con->rollback();
         echo "<p>Error: " . htmlspecialchars($e->getMessage()) . "</p>";
     }
 }

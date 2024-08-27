@@ -6,7 +6,7 @@ include('../common/dashboard.php');
 // Query to fetch purchases along with purchase items
 $query = "
     SELECT p.id, s.name as supplier_name, p.purchase_date, p.total_amount,
-           pi.quantity, pi.unit_price, pi.sales_price
+           pi.quantity, pi.unit_price
     FROM Purchases p
     JOIN Suppliers s ON p.supplier_id = s.id
     JOIN PurchaseItems pi ON p.id = pi.purchase_id
@@ -26,7 +26,7 @@ $purchases = $con->query($query);
                 <th>Total Amount</th>
                 <th>Quantity</th>
                 <th>Purchase Price</th>
-                <th>Determined Sales Price</th>
+                <th>Date</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -38,7 +38,7 @@ $purchases = $con->query($query);
                 <td><?php echo htmlspecialchars($row['total_amount']); ?></td>
                 <td><?php echo htmlspecialchars($row['quantity']); ?></td>
                 <td><?php echo htmlspecialchars($row['unit_price']); ?></td>
-                <td><?php echo htmlspecialchars($row['sales_price']); ?></td>
+                <td><?php echo htmlspecialchars($row['purchase_date']); ?></td>
                 <td>
                     <a href="PurchaseView.php?id=<?php echo htmlspecialchars($row['id']); ?>" class="btn btn-info btn-sm">View</a>
                 </td>

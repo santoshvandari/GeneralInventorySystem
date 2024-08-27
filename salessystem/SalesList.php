@@ -9,16 +9,6 @@ $sql = "SELECT sales.id, customers.name AS customer_name, sales.sale_date, sales
         JOIN customers ON sales.customer_id = customers.id";
 $result = $con->query($sql);
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sales List</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="../assets/styles.css">
-</head>
-<body>
     <div class="container mt-5">
         <h1>Sales List</h1>
         <a href="SalesCreate.php" class="btn btn-primary mb-3">Create New Sale</a>
