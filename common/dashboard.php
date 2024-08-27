@@ -71,9 +71,10 @@
                 <a href="../common/currentstock.php">Inventory Status</a>
                 <?php
                     // if($_SESSION['role'] == 'admin') {
-                    //     echo '<a href="users.php">Users</a>';
+                    //     echo '<a href="userlist.php">Users</a>';
                     // }
                     ?>
+                <a href="../common/userlist.php">Users</a>
                 <a href="#">Logout</a>
             </div>
 

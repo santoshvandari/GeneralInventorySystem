@@ -14,12 +14,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt = $con->prepare($sql);
     $stmt->bind_param("sss", $username, $password, $role);
 
-    if ($stmt->execute()) {
-        $message = "User registered successfully!";
-    } else {
-        $message = "Error: " . $stmt->error;
+    try{
+        $stmt->execute();
+       echo "<script>alert('User registered successfully!')
+        window.location.href='userlist.php'
+        ;</script>";
+    } catch (Exception $e) {
+        echo "<script>alert('Failed to  register User!')
+        window.location.href='userlist.php'
+        ;</script>";
     }
-
     $stmt->close();
 }
 ?>
@@ -47,9 +51,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="container mt-5">
         <div class="registration-container">
             <h2 class="text-center mb-4">User Registration</h2>
-            <?php if ($message): ?>
-                <div class="alert alert-info"><?php echo htmlspecialchars($message); ?></div>
-            <?php endif; ?>
             <form method="POST" action="">
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
