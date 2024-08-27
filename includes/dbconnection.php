@@ -8,7 +8,7 @@ try {
     if ($con->connect_error) {
         die("Connection failed: " . $con->connect_error);
     }else{
-        echo "Connected successfully";
+        // echo "Connected successfully";
        
     }
 } catch (PDOException $e) {
