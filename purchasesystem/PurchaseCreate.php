@@ -2,7 +2,7 @@
 include('../includes/dbconnection.php'); // Include your database connection file
 
 $suppliers = $con->query("SELECT id, name FROM Suppliers WHERE status='active'");
-$products = $con->query("SELECT id, name FROM Products WHERE status='active'");
+$products = $con->query("SELECT id, name FROM products WHERE status='active'");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $supplier_id = $con->real_escape_string($_POST['supplier']);

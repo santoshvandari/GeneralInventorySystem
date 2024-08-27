@@ -34,17 +34,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Commit transaction
             $con->commit();
             header("Location: SalesList.php");
+            exit();
         } else {
             throw new Exception("Error: " . $stmt->error);
         }
     } catch (Exception $e) {
         // Rollback transaction on error
         $con->rollback();
-        echo $e->getMessage();
+        echo "<p>Error: " . htmlspecialchars($e->getMessage()) . "</p>";
     }
 }
 
-// Resetting pointers to fetch data correctly
+// Fetch customers and products
 $customers = $con->query("SELECT * FROM customers");
 $products = $con->query("SELECT * FROM products");
 ?>
@@ -60,7 +61,7 @@ $products = $con->query("SELECT * FROM products");
         <label for="customer_id">Customer:</label>
         <select id="customer_id" name="customer_id" required>
             <?php while ($row = $customers->fetch_assoc()) { ?>
-                <option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
+                <option value="<?php echo htmlspecialchars($row['id']); ?>"><?php echo htmlspecialchars($row['name']); ?></option>
             <?php } ?>
         </select>
         <div id="sale_items">
@@ -71,7 +72,7 @@ $products = $con->query("SELECT * FROM products");
                     <?php
                     $products->data_seek(0);
                     while ($row = $products->fetch_assoc()) { ?>
-                        <option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
+                        <option value="<?php echo htmlspecialchars($row['id']); ?>"><?php echo htmlspecialchars($row['name']); ?></option>
                     <?php } ?>
                 </select>
                 <label for="quantity[]">Quantity:</label>
@@ -98,7 +99,7 @@ $products = $con->query("SELECT * FROM products");
                     <?php
                     $products->data_seek(0);
                     while ($row = $products->fetch_assoc()) { ?>
-                        <option value="<?php echo $row['id']; ?>"><?php echo $row['name']; ?></option>
+                        <option value="<?php echo htmlspecialchars($row['id']); ?>"><?php echo htmlspecialchars($row['name']); ?></option>
                     <?php } ?>
                 </select>
                 <label for="quantity[]">Quantity:</label>
