@@ -10,9 +10,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $total_amount = 0;
 
     // Insert the new purchase record
-    $query = "INSERT INTO Purchases (supplier_id, purchase_date, total_amount) 
-              VALUES ('$supplier_id', '$purchase_date', '$total_amount')";
-    if ($con->query($query)) {
+    // $query = "INSERT INTO Purchases (supplier_id, purchase_date, total_amount) VALUES ('$supplier_id', '$purchase_date', '$total_amount')";
+    $query = "INSERT INTO Purchases (supplier_id, purchase_date, total_amount) VALUES (?, ?, ?)";
+    $stmt = $con->prepare($query);
+    $stmt->bind_param("sss", $supplier_id, $purchase_date, $total_amount);
+
+    if ($stmt->execute()) {
         $purchase_id = $con->insert_id;
 
         // Insert purchase items
@@ -22,26 +25,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $total_price = $quantity * $unit_price;
             $total_amount += $total_price;
 
+            // $insert_item_query = "INSERT INTO PurchaseItems (purchase_id, product_id, quantity, unit_price) VALUES ('$purchase_id', '$product_id', '$quantity', '$unit_price')";
             $insert_item_query = "INSERT INTO PurchaseItems (purchase_id, product_id, quantity, unit_price) 
-                                  VALUES ('$purchase_id', '$product_id', '$quantity', '$unit_price')";
+                                  VALUES (?, ?, ?, ?)";
+            $stmt = $con->prepare($insert_item_query);
+            $stmt->bind_param("ssss", $purchase_id, $product_id, $quantity, $unit_price);
             
             // Update or insert stock information
+            // $insert_or_update_stock = "
+            //     INSERT INTO stock (product_id, purchase_stock, sales_stock)
+            //     VALUES ('$product_id', '$quantity', 0)
+            //     ON DUPLICATE KEY UPDATE 
+            //     purchase_stock = purchase_stock + VALUES(purchase_stock),
+            //     remaining_stock = (purchase_stock + VALUES(purchase_stock)) - sales_stock
+            // ";
             $insert_or_update_stock = "
                 INSERT INTO stock (product_id, purchase_stock, sales_stock)
-                VALUES ('$product_id', '$quantity', 0)
+                VALUES (?, ?, 0)
                 ON DUPLICATE KEY UPDATE 
                 purchase_stock = purchase_stock + VALUES(purchase_stock),
-                remaining_stock = (purchase_stock + VALUES(purchase_stock)) - sales_stock
-            ";
+                remaining_stock = (purchase_stock + VALUES(purchase_stock)) - sales_stock";
+            $smt = $con->prepare($insert_or_update_stock);
+            $smt->bind_param("ss", $product_id, $quantity);
 
-            if (!$con->query($insert_item_query) || !$con->query($insert_or_update_stock)) {
+
+            if (!$stmt->execute() || !$smt->execute()) {
                 die("Error inserting purchase item or updating stock: " . $con->error);
             }
         }
 
         // Update the total amount in the purchase record
-        $update_amount_query = "UPDATE Purchases SET total_amount = '$total_amount' WHERE id = '$purchase_id'";
-        if (!$con->query($update_amount_query)) {
+        // $update_amount_query = "UPDATE Purchases SET total_amount = '$total_amount' WHERE id = '$purchase_id'";
+        $update_amount_query = "UPDATE Purchases SET total_amount = ? WHERE id = ?";
+        $stmt = $con->prepare($update_amount_query);
+        $stmt->bind_param("ss", $total_amount, $purchase_id);
+
+        if (!$stmt->execute()) {
             die("Error updating total amount: " . $con->error);
         }
 
