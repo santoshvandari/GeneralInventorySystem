@@ -1,6 +1,6 @@
 <?php
 // include('dbconnection.php'); // Include your database connection file
-include('../includes/dbconnection.php'); // Include your database connection file
+include('../common/base.php'); // Include your database connection file
 
 
 

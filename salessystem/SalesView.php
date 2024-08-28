@@ -1,6 +1,6 @@
 <?php
 // include '../includes/dbconnection.php';
-include('../common/dashboard.php');
+include('../common/base.php');
 
 $sale_id = $_GET['id'];
 

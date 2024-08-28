@@ -1,9 +1,9 @@
 <?php
-include('dashboard.php');
+include('base.php');
 
 // Check user role
 if ($_SESSION['role'] != 'admin') {
-    header("Location: dashboard.php");
+    header("Location: ../index.php");
     exit();
 }
 

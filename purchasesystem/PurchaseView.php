@@ -1,6 +1,6 @@
 <?php
 // include('../includes/dbconnection.php'); // Include your database connection file
-include('../common/dashboard.php');
+include('../common/base.php');
 
 // Check if the purchase ID is set in the URL
 if (isset($_GET['id'])) {

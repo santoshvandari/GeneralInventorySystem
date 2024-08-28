@@ -1,6 +1,6 @@
 <?php
 // include('../includes/dbconnection.php'); // Include your database connection file
-include('../common/dashboard.php');
+include('../common/base.php');
 
 $query = "SELECT * FROM ProductGroups";
 $result = $con->query($query);

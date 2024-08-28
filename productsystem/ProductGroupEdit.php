@@ -1,12 +1,13 @@
 <?php
 // include('../includes/dbconnection.php'); // Include your database connection file
-include('../common/dashboard.php');
+include('../common/base.php');
 
 $id = $con->real_escape_string($_GET['id']);
 $query = "SELECT * FROM ProductGroups WHERE id = ?";
 $stmt = $con->prepare($query);
 $stmt->bind_param("s", $id);
-$result = $stmt->execute();
+$stmt->execute();
+$result = $stmt->get_result();
 $product_group = $result->fetch_assoc();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

@@ -1,4 +1,4 @@
 <?php
-    header("Location:../productsystem/ProductGroupList.php");
+    header("Location: dashboard.php");
 
 ?>

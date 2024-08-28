@@ -1,5 +1,5 @@
 <?php
-include('../common/dashboard.php');
+include('../common/base.php');
 
 $suppliers = $con->query("SELECT id, name FROM Suppliers WHERE status='active'");
 $products = $con->query("SELECT id, name FROM products WHERE status='active'");

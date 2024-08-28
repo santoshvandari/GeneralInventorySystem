@@ -1,6 +1,6 @@
 <?php
 // include '../includes/dbconnection.php';
-include('../common/dashboard.php');
+include('../common/base.php');
 
 $sql = "SELECT * FROM Suppliers";
 $result = $con->query($sql);

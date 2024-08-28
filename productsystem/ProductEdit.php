@@ -1,13 +1,13 @@
 <?php
 // include('../includes/dbconnection.php'); // Include your database connection file
-include('../common/dashboard.php');
+include('../common/base.php');
 
 $id = $con->real_escape_string($_GET['id']);
 $query = "SELECT * FROM products WHERE id = ?";
 $stmt = $con->prepare($query);
 $stmt->bind_param("s", $id);
-
-$result = $stmt->execute();
+$stmt->execute();
+$result = $stmt->get_result();
 $product = $result->fetch_assoc();
 
 $product_groups = $con->query("SELECT id, name FROM ProductGroups WHERE status='active'");

@@ -1,6 +1,6 @@
 <?php
 // include '../includes/dbconnection.php';
-include('../common/dashboard.php');
+include('../common/base.php');
 
 // Process form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

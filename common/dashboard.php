@@ -1,77 +1,97 @@
 <?php
-    include '../includes/dbconnection.php';
+include('base.php');
 
+// Fetch sales data (example: sales per month)
+$salesData = [];
+$salesLabels = [];
+$sql = "SELECT MONTHNAME(sale_date) as month, SUM(total_amount) as total_sales 
+        FROM sales 
+        GROUP BY MONTH(sale_date)";
+$result = $con->query($sql);
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $salesLabels[] = $row['month'];
+        $salesData[] = $row['total_sales'];
+    }
+}
+
+// Fetch stock levels (example: stock levels by product)
+$stockData = [];
+$stockLabels = [];
+$sql = "SELECT name, remaining_stock FROM products JOIN stock ON products.id = stock.product_id";
+$result = $con->query($sql);
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $stockLabels[] = $row['name'];
+        $stockData[] = $row['remaining_stock'];
+    }
+}
 ?>
- <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Dashboard</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <style>
-            body {
-                overflow-x: hidden;
-            }
-            .sidebar {
-                min-height: 100vh;
-                background-color: #f8f9fa;
-                padding: 15px;
-            }
-            .sidebar a {
-                text-decoration: none;
-                color: #000;
-                padding: 10px;
-                display: block;
-                border-radius: 5px;
-                margin-bottom: 5px;
-                transition: all 0.4s;
-            }
-            .sidebar a:hover {
-                background-color: #e2e6ea;
-            }
-            .content {
-                padding: 20px;
-            }
-        </style>
-    </head>
-    <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand fs-2 text-uppercase" href="/">Inventory System</a>
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Santosh Bhandari<?php #echo $_SESSION['username']; ?></a>
-                    </li>
-                </ul>
-            </div>
+
+<div class="container mt-5">
+    <h1>System Overview</h1>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Sales Chart</h3>
+            <canvas id="salesChart"></canvas>
         </div>
-    </nav>
+        <div class="col-md-6">
+            <h3>Stock Levels</h3>
+            <canvas id="stockChart"></canvas>
+        </div>
+    </div>
+</div>
 
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-3 col-lg-2 sidebar">
-                <h4>Menu</h4>
-                <a href="../productsystem/ProductGroupList.php">Product Group</a>
-                <a href="../productsystem/UnitOfMeasureList.php">Unit of Measure</a>
-                <a href="../productsystem/ProductList.php">Product</a>
-                <a href="../purchasesystem/SupplierList.php">Suppliers</a>
-                <a href="../purchasesystem/PurchaseList.php">Purchase</a>
-                <a href="../salessystem/CustomerList.php">Customer</a>
-                <a href="../salessystem/SalesList.php">Sales</a>
-                <a href="../common/currentstock.php">Inventory Status</a>
-                <?php
-                    // if($_SESSION['role'] == 'admin') {
-                    //     echo '<a href="userlist.php">Users</a>';
-                    // }
-                    ?>
-                <a href="../common/userlist.php">Users</a>
-                <a href="#">Logout</a>
-            </div>
+<?php include('footer.php'); ?>
 
-            <!-- Content -->
-            <div class="col-md-9 col-lg-10 content">
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+<script>
+    // Sales Chart
+    var ctx = document.getElementById('salesChart').getContext('2d');
+    var salesChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: <?php echo json_encode($salesLabels); ?>,
+            datasets: [{
+                label: 'Sales',
+                data: <?php echo json_encode($salesData); ?>,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Stock Levels Chart
+    var ctx2 = document.getElementById('stockChart').getContext('2d');
+    var stockChart = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: <?php echo json_encode($stockLabels); ?>,
+            datasets: [{
+                label: 'Stock Levels',
+                data: <?php echo json_encode($stockData); ?>,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>

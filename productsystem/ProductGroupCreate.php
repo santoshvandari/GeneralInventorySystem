@@ -1,6 +1,6 @@
 <?php
 // include('../includes/dbconnection.php'); // Include your database connection file
-include('../common/dashboard.php');
+include('../common/base.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = $con->real_escape_string($_POST['name']);

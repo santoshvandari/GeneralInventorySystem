@@ -27,7 +27,6 @@
         quantity INT,
         unit_price DECIMAL(10, 2),
         total_price DECIMAL(10, 2) GENERATED ALWAYS AS (quantity * unit_price) STORED,
-        sales_price DECIMAL(10, 2) NOT NULL,
         FOREIGN KEY (purchase_id) REFERENCES Purchases(id),
         FOREIGN KEY (product_id) REFERENCES products(id)
     );";

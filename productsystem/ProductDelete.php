@@ -1,6 +1,6 @@
 <?php
 // include('../includes/dbconnection.php'); // Include your database connection file
-include('../common/dashboard.php');
+include('../common/base.php');
 
 $id = $con->real_escape_string($_GET['id']);
 $query = "DELETE FROM products WHERE id = ?";

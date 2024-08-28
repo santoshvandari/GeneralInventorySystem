@@ -1,6 +1,6 @@
 <?php
 // include '../includes/dbconnection.php';
-include('../common/dashboard.php');
+include('../common/base.php');
 
 
 // Fetch sales data with customer names

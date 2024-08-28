@@ -1,6 +1,6 @@
 <?php
 // include '../includes/dbconnection.php';
-include('../common/dashboard.php');
+include('../common/base.php');
 $supplier_id = $_GET['id'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

@@ -1,6 +1,6 @@
 <?php
 // Include database connection and common dashboard
-include('../common/dashboard.php');
+include('../common/base.php');
 
 // Initialize variables to store error messages and form values
 $error_message = '';
@@ -17,14 +17,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         foreach ($products as $index => $product_id) {
             $quantity = $quantities[$index];
             
-            $stmt = $con->prepare("SELECT remaining_stock FROM stock WHERE product_id = ?");
+            $stmt=$con->prepare("SELECT remaining_stock FROM stock WHERE product_id=?");
             $stmt->bind_param('i', $product_id);
             $stmt->execute();
             $result = $stmt->get_result();
-            $row = $result->fetch_assoc();
+            $row1 = $result->fetch_assoc();
 
-            if (!$row || $row['remaining_stock'] < $quantity) {
-                $error_message = 'Error: Insufficient stock for product ID: ' . htmlspecialchars($product_id);
+            $stmt=$con->prepare("SELECT name FROM products WHERE id=?");
+            $stmt->bind_param('i', $product_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $row2 = $result->fetch_assoc();
+            
+            if (!$row1 || $row1['remaining_stock'] < $quantity) {
+                // Ensure product name is available, fallback to a placeholder if not
+                $product_name = $row2['name'] ?? 'Unknown product';
+                $error_message = 'Error: Insufficient stock for product: ' . htmlspecialchars($product_name);
                 throw new Exception($error_message);
             }
         }
@@ -37,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Insert sale items and update stock
             $stmt = $con->prepare("INSERT INTO sale_items (sale_id, product_id, quantity, unit_price) VALUES (?, ?, ?, ?)");
-            $update_stock_stmt = $con->prepare("UPDATE stock SET sales_stock = sales_stock + ?, remaining_stock = remaining_stock - ? WHERE product_id = ?");
+            $update_stock_stmt = $con->prepare("UPDATE stock SET sales_stock = sales_stock + ? WHERE product_id = ?");
 
             foreach ($products as $index => $product_id) {
                 $quantity = $quantities[$index];
@@ -50,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
 
                 // Update stock
-                $update_stock_stmt->bind_param('iii', $quantity, $quantity, $product_id);
+                $update_stock_stmt->bind_param('ii', $quantity, $product_id);
                 if (!$update_stock_stmt->execute()) {
                     throw new Exception("Error updating stock: " . $update_stock_stmt->error);
                 }
@@ -65,6 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } catch (Exception $e) {
         $con->rollback();
         // Error message will be displayed above the form
+        // echo '<div class="alert alert-danger" role="alert">' . htmlspecialchars($e->getMessage()) . '</div>';
     }
 }
 
@@ -175,32 +184,31 @@ $products_list = $con->query("SELECT * FROM products");
     function updateProductSelection(currentSelect) {
         var allSelects = document.querySelectorAll('select[name="product_id[]"]');
         var selectedValues = Array.from(allSelects).map(select => select.value);
-
         allSelects.forEach(select => {
-            Array.from(select.options).forEach(option => {
-                option.disabled = selectedValues.includes(option.value) && option.value !== select.value;
-            });
+            if (select !== currentSelect) {
+                var options = select.querySelectorAll('option');
+                options.forEach(option => {
+                    option.disabled = selectedValues.includes(option.value) && option.value !== currentSelect.value;
+                });
+            }
         });
     }
 
     function validateForm() {
-        var items = document.querySelectorAll('.sale_item');
         var valid = true;
-
+        var items = document.querySelectorAll('.sale_item');
+        
         items.forEach(function(item) {
             var productSelect = item.querySelector('select[name="product_id[]"]');
             var quantityInput = item.querySelector('input[name="quantity[]"]');
             var unitPriceInput = item.querySelector('input[name="unit_price[]"]');
-
+            
             if (!productSelect.value || !quantityInput.value || !unitPriceInput.value) {
                 valid = false;
+                alert('Please fill out all fields.');
             }
         });
 
         return valid;
     }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        updateProductSelection();
-    });
 </script>

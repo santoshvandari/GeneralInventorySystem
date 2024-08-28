@@ -1,7 +1,7 @@
 <?php
 // Include your database connection file and dashboard
 // include('../includes/dbconnection.php');
-include('../common/dashboard.php');
+include('../common/base.php');
 
 // Query to fetch purchases along with purchase items
 $query = "
@@ -35,7 +35,7 @@ $purchases = $con->query($query);
             <tr>
                 <td><?php echo htmlspecialchars($row['id']); ?></td>
                 <td><?php echo htmlspecialchars($row['supplier_name']); ?></td>
-                <td><?php echo htmlspecialchars($row['total_amount']); ?></td>
+                <td><?php echo htmlspecialchars($row['quantity'] * $row['unit_price']); ?></td>
                 <td><?php echo htmlspecialchars($row['quantity']); ?></td>
                 <td><?php echo htmlspecialchars($row['unit_price']); ?></td>
                 <td><?php echo htmlspecialchars($row['purchase_date']); ?></td>

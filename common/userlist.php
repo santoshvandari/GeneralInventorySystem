@@ -1,10 +1,10 @@
 <?php
 // include('../includes/dbconnection.php'); // Include your database connection file
 // session_start();
-include('dashboard.php');
+include('base.php');
 // Check user role
 if ($_SESSION['role'] != 'admin') {
-    header("Location: dashboard.php");
+    header("Location: ../index.php");
     exit();
 }
 

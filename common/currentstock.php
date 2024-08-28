@@ -1,5 +1,5 @@
 <?php 
-include 'dashboard.php'; 
+include 'base.php'; 
 // Fetch product data including average rate, purchase quantity, sold quantity, remaining quantity, and status
 $sql = "
     SELECT 
@@ -39,7 +39,8 @@ $result = $con->query($sql);
                     $readquery="SELECT * FROM stock WHERE product_id=?";
                     $smt=$con->prepare($readquery);
                     $smt->bind_param('i',$row['id']);
-                    $stockinfo_result=$smt->execute();
+                    $smt->execute();
+                    $stockinfo_result=$smt->get_result();
                     $stockinfo = $stockinfo_result->fetch_assoc();
 
                     // Determine the stock status

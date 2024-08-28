@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['role'] = $user['role'];
-            header("Location: dashboard.php"); // Redirect to dashboard after login
+            header("Location: ../common/dashboard.php"); // Redirect to dashboard after login
             exit();
         } else {
             $message = "Invalid password.";

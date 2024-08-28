@@ -1,6 +1,6 @@
 <?php
 // include('../includes/dbconnection.php'); // Include your database connection file
-include('../common/dashboard.php');
+include('../common/base.php');
 
 $product_groups = $con->query("SELECT id, name FROM ProductGroups WHERE status='active'");
 $units_of_measure = $con->query("SELECT id, name FROM UnitOfMeasure WHERE status='active'");

@@ -1,5 +1,5 @@
 <?php
-include('../common/dashboard.php');
+include('../common/base.php');
 // include '../includes/dbconnection.php';
 
 // Initialize variables
