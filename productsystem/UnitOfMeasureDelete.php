@@ -5,9 +5,12 @@ include('../includes/dbconnection.php'); // Include your database connection fil
 
 
 $id = $con->real_escape_string($_GET['id']);
-$query = "DELETE FROM UnitOfMeasure WHERE id = $id";
+$query = "DELETE FROM UnitOfMeasure WHERE id = ?";
+$stmt = $con->prepare($query);
+$stmt->bind_param("s", $id);
+
 try{
-    $con->query($query);
+    $stmt->execute();
     header('Location: UnitOfMeasureList.php');
 }catch(Exception $e){
     echo "<script>alert('Failed to Delete');

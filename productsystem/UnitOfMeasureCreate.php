@@ -8,8 +8,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $description = $con->real_escape_string($_POST['description']);
     $status = $con->real_escape_string($_POST['status']);
 
-    $query = "INSERT INTO UnitOfMeasure (name, code, description, status) VALUES ('$name', '$code', '$description', '$status')";
-    if ($con->query($query)) {
+    // $query = "INSERT INTO UnitOfMeasure (name, code, description, status) VALUES ('$name', '$code', '$description', '$status')";
+    $query = "INSERT INTO UnitOfMeasure (name, code, description, status) VALUES (?, ?, ?, ?)";
+    $stmt = $con->prepare($query);
+    $stmt->bind_param("ssss", $name, $code, $description, $status);
+
+    if ($stmt->execute()) {
         header('Location: UnitOfMeasureList.php');
         exit();
     } else {

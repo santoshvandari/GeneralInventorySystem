@@ -12,9 +12,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $unit_of_measure_id = $con->real_escape_string($_POST['unit_of_measure']);
     $status = $con->real_escape_string($_POST['status']);
 
-    $query = "INSERT INTO products (name, description, productgroupid, unitofmeasureid, status) 
-              VALUES ('$name', '$description', '$product_group_id', '$unit_of_measure_id', '$status')";
-    if ($con->query($query)) {
+    // $query = "INSERT INTO products (name, description, productgroupid, unitofmeasureid, status)  VALUES ('$name', '$description', '$product_group_id', '$unit_of_measure_id', '$status')";
+    $query="INSERT INTO products (name, description, productgroupid, unitofmeasureid, status) VALUES (?, ?, ?, ?, ?)";
+    $stmt = $con->prepare($query);
+    $stmt->bind_param("sssss", $name, $description, $product_group_id, $unit_of_measure_id, $status);
+
+
+    if ($stmt->execute()) {
         header('Location: ProductList.php');
     } else {
         echo "Error: " . $con->error;

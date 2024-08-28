@@ -3,8 +3,10 @@
 include('../common/dashboard.php');
 
 $id = $con->real_escape_string($_GET['id']);
-$query = "SELECT * FROM ProductGroups WHERE id = $id";
-$result = $con->query($query);
+$query = "SELECT * FROM ProductGroups WHERE id = ?";
+$stmt = $con->prepare($query);
+$stmt->bind_param("s", $id);
+$result = $stmt->execute();
 $product_group = $result->fetch_assoc();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -12,8 +14,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $description = $con->real_escape_string($_POST['description']);
     $status = $con->real_escape_string($_POST['status']);
 
-    $query = "UPDATE ProductGroups SET name = '$name', description = '$description', status = '$status' WHERE id = $id";
-    if ($con->query($query)) {
+    // $query = "UPDATE ProductGroups SET name = '$name', description = '$description', status = '$status' WHERE id = $id";
+    $query = "UPDATE ProductGroups SET name = ?, description = ?, status = ? WHERE id = ?";
+    $stmt = $con->prepare($query);
+    $stmt->bind_param("ssss", $name, $description, $status, $id);
+
+    if ($stmt->execute()) {
         header('Location: ProductGroupList.php');
     } else {
         echo "<div class='alert alert-danger'>Error: " . $con->error . "</div>";

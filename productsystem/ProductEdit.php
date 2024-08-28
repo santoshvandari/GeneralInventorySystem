@@ -3,8 +3,11 @@
 include('../common/dashboard.php');
 
 $id = $con->real_escape_string($_GET['id']);
-$query = "SELECT * FROM products WHERE id = $id";
-$result = $con->query($query);
+$query = "SELECT * FROM products WHERE id = ?";
+$stmt = $con->prepare($query);
+$stmt->bind_param("s", $id);
+
+$result = $stmt->execute();
 $product = $result->fetch_assoc();
 
 $product_groups = $con->query("SELECT id, name FROM ProductGroups WHERE status='active'");
@@ -17,8 +20,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $unit_of_measure_id = $con->real_escape_string($_POST['unit_of_measure']);
     $status = $con->real_escape_string($_POST['status']);
 
-    $query = "UPDATE products SET name = '$name', description = '$description', productgroupid = '$product_group_id', unitofmeasureid = '$unit_of_measure_id', status = '$status' WHERE id = $id";
-    if ($con->query($query)) {
+    // $query = "UPDATE products SET name = '$name', description = '$description', productgroupid = '$product_group_id', unitofmeasureid = '$unit_of_measure_id', status = '$status' WHERE id = $id";
+    $query = "UPDATE products SET name = ?, description = ?, productgroupid = ?, unitofmeasureid = ?, status = ? WHERE id = ?";
+    $stmt = $con->prepare($query);
+    $stmt->bind_param("ssssss", $name, $description, $product_group_id, $unit_of_measure_id, $status, $id);
+
+    if ($stmt->execute()) {
         header('Location: ProductList.php');
     } else {
         echo "Error: " . $con->error;

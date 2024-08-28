@@ -7,8 +7,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $description = $con->real_escape_string($_POST['description']);
     $status = $con->real_escape_string($_POST['status']);
 
-    $query = "INSERT INTO ProductGroups (name, description, status) VALUES ('$name', '$description', '$status')";
-    if ($con->query($query)) {
+    // $query = "INSERT INTO ProductGroups (name, description, status) VALUES ('$name', '$description', '$status')";
+    $query = "INSERT INTO ProductGroups (name, description, status) VALUES (?, ?, ?)";
+    $stmt = $con->prepare($query);
+    $stmt->bind_param("sss", $name, $description, $status);
+    if ($stmt->execute()){
         header('Location: ProductGroupList.php');
     } else {
         echo "<div class='alert alert-danger'>Error: " . $con->error . "</div>";

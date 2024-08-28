@@ -3,8 +3,10 @@
 include('../common/dashboard.php');
 
 $id = $con->real_escape_string($_GET['id']);
-$query = "SELECT * FROM UnitOfMeasure WHERE id = $id";
-$result = $con->query($query);
+$query = "SELECT * FROM UnitOfMeasure WHERE id = ?";
+$stmt = $con->prepare($query);
+$stmt->bind_param("s", $id);
+$result = $stmt->execute();
 $unit_of_measure = $result->fetch_assoc();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -13,8 +15,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $description = $con->real_escape_string($_POST['description']);
     $status = $con->real_escape_string($_POST['status']);
 
-    $query = "UPDATE UnitOfMeasure SET name = '$name', code = '$code', description = '$description', status = '$status' WHERE id = $id";
-    if ($con->query($query)) {
+    // $query = "UPDATE UnitOfMeasure SET name = '$name', code = '$code', description = '$description', status = '$status' WHERE id = $id";
+    $query = "UPDATE UnitOfMeasure SET name = ?, code = ?, description = ?, status = ? WHERE id = ?";
+    $stmt = $con->prepare($query);
+    $stmt->bind_param("sssss", $name, $code, $description, $status, $id);
+    if ($stmt->execute()) {
         header('Location: UnitOfMeasureList.php');
     } else {
         echo "Error: " . $con->error;

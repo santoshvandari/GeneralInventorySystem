@@ -3,9 +3,11 @@
 include('../common/dashboard.php');
 
 $id = $con->real_escape_string($_GET['id']);
-$query = "DELETE FROM ProductGroups WHERE id = $id";
+$query = "DELETE FROM ProductGroups WHERE id = ?";
+$stmt = $con->prepare($query);
+$stmt->bind_param("s", $id);
 try{
-    $con->query($query);
+    $stmt->execute();
     header('Location: ProductGroupList.php');
 }catch(Exception $e){
     echo "<script>alert('Failed to Delete');
