@@ -1,6 +1,5 @@
-<?php include 'dashboard.php'; ?>
-<?php
-
+<?php 
+include 'dashboard.php'; 
 // Fetch product data including average rate, purchase quantity, sold quantity, remaining quantity, and status
 $sql = "
     SELECT 
@@ -36,7 +35,11 @@ $result = $con->query($sql);
             <tbody>
                 <?php while ($row = $result->fetch_assoc()) { 
                     // Fetch stock information for the current product
-                    $stockinfo_result = $con->query("SELECT * FROM stock WHERE product_id=" . $row['id'].";");
+                    // $stockinfo_result = $con->query("SELECT * FROM stock WHERE product_id=" . $row['id'].";");
+                    $readquery="SELECT * FROM stock WHERE product_id=?";
+                    $smt=$con->prepare($readquery);
+                    $smt->bind_param('i',$row['id']);
+                    $stockinfo_result=$smt->execute();
                     $stockinfo = $stockinfo_result->fetch_assoc();
 
                     // Determine the stock status
@@ -53,7 +56,7 @@ $result = $con->query($sql);
                 ?>
                     <tr>
                         <td><?php echo htmlspecialchars($row['name']); ?></td>
-                        <td>$<?php echo $average_rate; ?></td>
+                        <td>Rs.<?php echo $average_rate; ?></td>
                         <td><?php echo htmlspecialchars($purchase_stock); ?></td>
                         <td><?php echo htmlspecialchars($sales_stock); ?></td>
                         <td><?php echo htmlspecialchars($remaining_stock); ?></td>
