@@ -28,7 +28,7 @@ $result = $con->query($sql);
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>S.N.</th>
                     <th>Username</th>
                     <th>Role</th>
                     <th>Created At</th>
@@ -36,9 +36,10 @@ $result = $con->query($sql);
                 </tr>
             </thead>
             <tbody>
+                <?php $counter = 0; ?>
                 <?php while ($row = $result->fetch_assoc()): ?>
                 <tr>
-                    <td><?php echo htmlspecialchars($row['id']); ?></td>
+                    <td><?php echo ++$counter; ?></td>
                     <td><?php echo htmlspecialchars($row['username']); ?></td>
                     <td><?php echo htmlspecialchars(ucfirst($row['role'])); ?></td>
                     <td><?php echo htmlspecialchars($row['created_at']); ?></td>

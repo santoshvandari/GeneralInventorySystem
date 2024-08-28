@@ -17,7 +17,7 @@ if (!$result) {
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>S.N.</th>
                     <th>Name</th>
                     <th>Email</th>
                     <th>Phone</th>
@@ -26,9 +26,10 @@ if (!$result) {
                 </tr>
             </thead>
             <tbody>
+                <?php $counter = 0; ?>
                 <?php while ($row = $result->fetch_assoc()) { ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($row['id']); ?></td>
+                        <td><?php echo ++$counter; ?></td>
                         <td><?php echo htmlspecialchars($row['name']); ?></td>
                         <td><?php echo htmlspecialchars($row['email']); ?></td>
                         <td><?php echo htmlspecialchars($row['phone']); ?></td>

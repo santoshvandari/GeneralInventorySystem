@@ -12,7 +12,7 @@ $result = $con->query($query);
         <table class="table table-bordered">
             <thead class="table-dark">
                 <tr>
-                    <th>ID</th>
+                    <th>S.N.</th>
                     <th>Name</th>
                     <th>Description</th>
                     <th>Status</th>
@@ -20,9 +20,10 @@ $result = $con->query($query);
                 </tr>
             </thead>
             <tbody>
+                <?php $counter = 0; ?>
                 <?php while($row = $result->fetch_assoc()): ?>
                 <tr>
-                    <td><?php echo $row['id']; ?></td>
+                    <td><?php echo ++$counter; ?></td>
                     <td><?php echo htmlspecialchars($row['name']); ?></td>
                     <td><?php echo htmlspecialchars($row['description']); ?></td>
                     <td><?php echo ucfirst($row['status']); ?></td>

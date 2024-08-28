@@ -34,8 +34,6 @@ $result = $con->query($sql);
             </thead>
             <tbody>
                 <?php while ($row = $result->fetch_assoc()) { 
-                    // Fetch stock information for the current product
-                    // $stockinfo_result = $con->query("SELECT * FROM stock WHERE product_id=" . $row['id'].";");
                     $readquery="SELECT * FROM stock WHERE product_id=?";
                     $smt=$con->prepare($readquery);
                     $smt->bind_param('i',$row['id']);

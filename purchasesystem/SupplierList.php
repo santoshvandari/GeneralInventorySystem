@@ -12,7 +12,7 @@ $result = $con->query($sql);
         <table class="table table-bordered table-striped">
             <thead class="thead-dark">
                 <tr>
-                    <th>ID</th>
+                    <th>S.N.</th>
                     <th>Name</th>
                     <th>Contact Info</th>
                     <th>Status</th>
@@ -20,9 +20,10 @@ $result = $con->query($sql);
                 </tr>
             </thead>
             <tbody>
+                <?php $counter = 0; ?>
                 <?php while ($row = $result->fetch_assoc()) { ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($row['id']); ?></td>
+                        <td><?php echo ++$counter; ?></td>
                         <td><?php echo htmlspecialchars($row['name']); ?></td>
                         <td><?php echo htmlspecialchars($row['contact_info']); ?></td>
                         <td><?php echo htmlspecialchars($row['status']); ?></td>

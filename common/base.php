@@ -5,8 +5,6 @@
         header("Location: ../login/index.php");
         exit();
     }
-    
-
 ?>
  <!DOCTYPE html>
     <html lang="en">
@@ -71,7 +69,7 @@
                 <a href="../common/currentstock.php">Inventory Status</a>
                 <?php
                     if($_SESSION['role'] == 'admin') {
-                        echo '<a href="userlist.php">Users</a>';
+                        echo '<a href="../common/userlist.php">Users</a>';
                     }
                     ?>
                 <a href="../common/logout.php">Logout</a>

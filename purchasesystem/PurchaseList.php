@@ -21,7 +21,7 @@ $purchases = $con->query($query);
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>ID</th>
+                <th>S.N.</th>
                 <th>Supplier</th>
                 <th>Total Amount</th>
                 <th>Quantity</th>
@@ -31,9 +31,10 @@ $purchases = $con->query($query);
             </tr>
         </thead>
         <tbody>
+            <?php $counter = 0; ?>
             <?php while($row = $purchases->fetch_assoc()): ?>
             <tr>
-                <td><?php echo htmlspecialchars($row['id']); ?></td>
+                <td><?php echo ++$counter; ?></td>
                 <td><?php echo htmlspecialchars($row['supplier_name']); ?></td>
                 <td><?php echo htmlspecialchars($row['quantity'] * $row['unit_price']); ?></td>
                 <td><?php echo htmlspecialchars($row['quantity']); ?></td>

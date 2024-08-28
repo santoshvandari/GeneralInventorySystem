@@ -17,7 +17,7 @@ $result = $con->query($query);
         <table class="table table-striped table-bordered">
             <thead class="thead-dark">
                 <tr>
-                    <th>ID</th>
+                    <th>S.N.</th>
                     <th>Name</th>
                     <th>Description</th>
                     <th>Product Group</th>
@@ -27,9 +27,10 @@ $result = $con->query($query);
                 </tr>
             </thead>
             <tbody>
+                <?php $counter = 0; ?>
                 <?php while($row = $result->fetch_assoc()): ?>
                 <tr>
-                    <td><?php echo $row['id']; ?></td>
+                    <td><?php echo ++$counter; ?></td>
                     <td><?php echo $row['name']; ?></td>
                     <td><?php echo $row['description']; ?></td>
                     <td><?php echo $row['product_group']; ?></td>

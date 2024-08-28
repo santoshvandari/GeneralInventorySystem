@@ -4,7 +4,7 @@ include('../common/base.php');
 
 // Initialize variables to store error messages and form values
 $error_message = '';
-$customer_id = $_POST['customer_id'] ?? null;
+$customer_id = $_POST['customer_id'] ?? 0;
 $total_amount = $_POST['total_amount'] ?? 0;
 $products = $_POST['product_id'] ?? [];
 $quantities = $_POST['quantity'] ?? [];
