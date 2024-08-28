@@ -17,5 +17,6 @@ try{
     </script>";
     echo "Error: " . $con->error;
 }
+}
 
 ?>
